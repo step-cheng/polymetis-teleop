@@ -1,0 +1,3 @@
+[submodule "fairo/polymetis/polymetis/src/clients/franka_panda_client/third_party/libfranka"]
+	path = fairo/polymetis/polymetis/src/clients/franka_panda_client/third_party/libfranka
+	url = https://github.com/frankaemika/libfranka.git
