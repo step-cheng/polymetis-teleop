@@ -5,6 +5,11 @@ import polymetis
 
 __version__ = ""
 
+def find_git_root(path):
+    while path != "/" and not os.path.isdir(os.path.join(path, ".git")):
+        path = os.path.dirname(path)
+    return path if os.path.isdir(os.path.join(path, ".git")) else None
+
 # Conda installed: Get version of conda pkg (assigned $GIT_DESCRIBE_NUMBER during build)
 if "CONDA_PREFIX" in os.environ and os.environ["CONDA_PREFIX"] in polymetis.__file__:
     # Search conda pkgs for polymetis & extract version number
@@ -19,7 +24,8 @@ if "CONDA_PREFIX" in os.environ and os.environ["CONDA_PREFIX"] in polymetis.__fi
 else:
     # Navigate to polymetis pkg dir, which should be within the git repo
     original_cwd = os.getcwd()
-    os.chdir(os.path.dirname(polymetis.__file__))
+    os.chdir(find_git_root(os.path.dirname(__file__)))
+    # os.chdir(os.path.dirname(polymetis.__file__))
 
     # Git describe output
     stream = os.popen("git describe --tags")
@@ -27,7 +33,8 @@ else:
 
     # Modify to same format as conda env variable GIT_DESCRIBE_NUMBER
     version_items = version_string.strip("\n").split("-")
-    __version__ = f"{version_items[-2]}_{version_items[-1]}"
+    # __version__ = f"{version_items[-2]}_{version_items[-1]}"
+    __version__ = f"{version_items[0]}"
 
     # Reset cwd
     os.chdir(original_cwd)
